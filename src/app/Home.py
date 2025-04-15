@@ -10,13 +10,13 @@ st.set_page_config(
 st.write("# FinClad: A Data Cleaner for Finances")
 
 #Intro text
-st.write("Welcome to FinClad, a data cleaner and visualization tool for your personl finances!")
+st.write("Welcome to FinClad, a data cleaner and visualization tool for your personal finances!")
 st.write("If you have an already-created ID, simply type it into the field called ID and click the Enter button.")
 st.write("If you do not have an account, please type your information into the designated fields and the click Enter!")
 
 
 #Button to proceed with financial data:
-st.text_input("User ID")
+customer_id = st.text_input("User ID")
 st.button("Enter", type="primary")
 
 #Begin process of collecting information based on user input:
