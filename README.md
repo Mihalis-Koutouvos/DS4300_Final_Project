@@ -1,5 +1,6 @@
 # CSV Data Cleaner for Finances
 
+**DS4300 Final Project**
 **Team Members:** Lily, Heidi, Mihalis, and Maya
 
 This project allows users to upload raw financial CSV files (e.g., containing `Name`, `Age`, `Checking Account Balance`, etc.). It detects and removes faulty or missing entries, stores the cleaned version, and provides interactive graphs to visualize relationships within the data.
@@ -7,14 +8,14 @@ This project allows users to upload raw financial CSV files (e.g., containing `N
 
 ## Core Features
 
-- 📤 **CSV Upload**: Users upload CSVs with financial data
-- 🧹 **Data Cleaning**: Automatically removes rows with missing or erroneous values
-- 📊 **Graphical Insights**: Visualizations using `pandas`, `NumPy`, `matplotlib`
-- 👤 **User Data Display**: Showcases cleaned user data attributes
+- **CSV Upload**: Users upload CSVs with financial data
+- **Data Cleaning**: Automatically removes rows with missing or erroneous values
+- **Graphical Insights**: Visualizations using `pandas`, `NumPy`, `matplotlib`
+- **User Data Display**: Showcases cleaned user data attributes
 
 
 
-## ☁️ AWS Architecture
+## AWS Architecture
 
 - **S3 (Simple Storage Service)**  
   - One bucket for raw CSV uploads  
@@ -31,7 +32,6 @@ This project allows users to upload raw financial CSV files (e.g., containing `N
   - Hosts a Streamlit web app  
   - Displays cleaned user data and generates visual insights  
 
----
 
 ## Project Goals
 
@@ -47,6 +47,7 @@ This project allows users to upload raw financial CSV files (e.g., containing `N
 - AWS account with S3 and RDS access
 - Required Python packages (see requirements.txt)
 
+---
 
 ## AWS Setup Instructions
 
