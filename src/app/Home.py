@@ -1,6 +1,6 @@
 import streamlit as st
-from db_utils import check_user_exists, insert_user_into_rds
-from s3_utils import upload_user_data_to_s3
+from app.rds_utils import check_user_exists, insert_user_into_rds
+from app.s3_utils import upload_user_data_to_s3
 import random
 
 #Setting icon and tab label
