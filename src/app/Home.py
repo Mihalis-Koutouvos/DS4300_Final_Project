@@ -1,7 +1,8 @@
 import streamlit as st
-from app.rds_utils import check_user_exists, insert_user_into_rds
-from app.s3_utils import upload_user_data_to_s3
+from rds_utils import check_user_exists, insert_user_into_rds
+from s3_utils import upload_user_data_to_s3
 import random
+import pandas as pd
 
 #Setting icon and tab label
 st.set_page_config(
@@ -37,22 +38,60 @@ if st.button("Enter"):
         customer_id = generate_customer_id()
         st.warning("Looks like you're new. Please fill out the registration form.")
 
+
+# allow user to upload csv file
+uploaded_files = st.file_uploader("...or upload a CSV with your information", type=["csv"], accept_multiple_files=True)
+# Store all CSVs in one list
+monthly_data = []
+
+# Populate form from the first file
+csv_data = {}
+
+if uploaded_files:
+    for i, file in enumerate(uploaded_files):
+        try:
+            df = pd.read_csv(file)
+            if df.empty:
+                st.warning(f"File {file.name} is empty.")
+            else:
+                monthly_data.append((file.name, df))
+
+                # Populate form from first file only
+                if i == 0:
+                    row = df.iloc[0]
+                    csv_data = {
+                        "firstName": row.get("First Name", ""),
+                        "lastName": row.get("Last Name", ""),
+                        "age": str(row.get("Age", "")),
+                        "city": row.get("City", ""),
+                        "email": row.get("Email", ""),
+                        "accountBalance": str(row.get("Account Balance", "")),
+                        "creditLimit": str(row.get("Credit Limit", "")),
+                        "creditCardBalance": str(row.get("Credit Card Balance", ""))
+                    }
+
+        except Exception as e:
+            st.error(f"❌ Failed to process {file.name}: {e}")
+
+    st.success(f"{len(monthly_data)} file(s) processed successfully.")
+
+
+
+
 #Begin process of collecting information based on user input:
-first_name = st.text_input("First Name: ")
-last_name = st.text_input("Last Name: ")
-age = st.text_input("Age: ")
-city = st.text_input("City: ")
-email = st.text_input("Email: ")
-account_balance = st.text_input("Account Balance: ")
-credit_limit = st.text_input("Credit Limit: ")
-credit_card_balance = st.text_input("Credit Card Balance: ")
+first_name = st.text_input("First Name:", value=csv_data.get("firstName", ""))
+last_name = st.text_input("Last Name:", value=csv_data.get("lastName", ""))
+age = st.text_input("Age:", value=csv_data.get("age", ""))
+city = st.text_input("City:", value=csv_data.get("city", ""))
+email = st.text_input("Email:", value=csv_data.get("email", ""))
+account_balance = st.text_input("Account Balance:", value=csv_data.get("accountBalance", ""))
+credit_limit = st.text_input("Credit Limit:", value=csv_data.get("creditLimit", ""))
+credit_card_balance = st.text_input("Credit Card Balance:", value=csv_data.get("creditCardBalance", ""))
+
 
 # Submit button
 if st.button("Submit"):
-    if not email:
-        st.error("Email is required.")
-    else:
-        user_data = {
+    user_data = {
             "customerId": customer_id,
             "firstName": first_name,
             "lastName": last_name,
@@ -64,17 +103,20 @@ if st.button("Submit"):
             "creditCardBalance": credit_card_balance
         }
 
-        try:
+    try:
 
-            # upload to S3
-            s3_key = upload_user_data_to_s3(user_data, identifier=customer_id)
-            
+        # Upload each file to S3
+        for file_name, df in monthly_data:
+            record_dict = df.to_dict(orient="records")
+            upload_key = f"{customer_id}/{file_name}"
+            s3_key = upload_user_data_to_s3(record_dict, identifier=upload_key)
+        
             # Insert to RDS
-            insert_user_into_rds(user_data)
+            insert_user_into_rds(record_dict)
 
-            st.success(f"✅ Uploaded to S3 and inserted into RDS!")
-        except Exception as e:
-            st.error(f"❌ Upload failed: {e}")
+        st.success(f"✅ Uploaded to S3 and inserted into RDS!")
+    except Exception as e:
+        st.error(f"❌ Upload failed: {e}")
 
 
 

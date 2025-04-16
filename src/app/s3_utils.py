@@ -7,20 +7,26 @@ from datetime import datetime
 # Load .env variables
 load_dotenv()
 
-AWS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
+'''AWS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
-S3_BUCKET = os.getenv("S3_BUCKET_NAME")
+S3_BUCKET = os.getenv("S3_BUCKET_NAME")'''
+
+AWS_ACCESS_KEY_ID="ASIA2MNVMDREPQVOFHLE"
+AWS_SECRET_ACCESS_KEY="0M0hPhI8yb+wMuEBVtD0FhBgtgU4oO6Gc1Ubdpzb"
+AWS_REGION='us-east-1'
+S3_BUCKET_NAME='ds4300-final-project-raw-data' 
+
 
 # Create S3 client
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=AWS_KEY,
-    aws_secret_access_key=AWS_SECRET,
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
     region_name=AWS_REGION
 )
 
-def upload_user_data_to_s3(user_data, identifier="user"):
+def upload_user_data_to_s3(user_data, identifier):
     """
     Uploads a dictionary as a JSON file to S3.
 
@@ -29,11 +35,11 @@ def upload_user_data_to_s3(user_data, identifier="user"):
         identifier (str): A string to uniquely identify the file (e.g., email or userID).
     """
     try:
-        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-        file_name = f"user_uploads/{identifier}_{timestamp}.json"
+        #timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        file_name = f"user_uploads/{identifier}.json"
 
         s3.put_object(
-            Bucket=S3_BUCKET,
+            Bucket=S3_BUCKET_NAME,
             Key=file_name,
             Body=json.dumps(user_data),
             ContentType="application/json"
