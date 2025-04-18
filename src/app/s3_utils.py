@@ -7,22 +7,16 @@ from datetime import datetime
 # Load .env variables
 load_dotenv()
 
-'''AWS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
-S3_BUCKET = os.getenv("S3_BUCKET_NAME")'''
-
-AWS_ACCESS_KEY_ID="ASIA2MNVMDREPQVOFHLE"
-AWS_SECRET_ACCESS_KEY="0M0hPhI8yb+wMuEBVtD0FhBgtgU4oO6Gc1Ubdpzb"
-AWS_REGION='us-east-1'
-S3_BUCKET_NAME='ds4300-final-project-raw-data' 
-
+S3_BUCKET = os.getenv("S3_BUCKET_NAME")
 
 # Create S3 client
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    aws_access_key_id=AWS_KEY,
+    aws_secret_access_key=AWS_SECRET,
     region_name=AWS_REGION
 )
 
@@ -39,7 +33,7 @@ def upload_user_data_to_s3(user_data, identifier):
         file_name = f"user_uploads/{identifier}.json"
 
         s3.put_object(
-            Bucket=S3_BUCKET_NAME,
+            Bucket=S3_BUCKET,
             Key=file_name,
             Body=json.dumps(user_data),
             ContentType="application/json"
