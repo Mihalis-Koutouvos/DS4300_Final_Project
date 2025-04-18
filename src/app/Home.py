@@ -104,6 +104,10 @@ if st.button("Submit"):
             "creditLimit": credit_limit,
             "creditCardBalance": credit_card_balance
         }
+    
+    # Save to session state
+    st.session_state.user_data = user_data  # Store user data in session state
+
 
     try:
 
