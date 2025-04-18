@@ -2,7 +2,6 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-from rds_utils import check_user_exists
 
 # Setting icon and tab label
 st.set_page_config(page_title="Finances", page_icon="🌆")
@@ -17,7 +16,8 @@ st.write("We would be glad to help fix and bolster your experience on FinClad!")
 customer_id = st.session_state.get('customer_id')
 
 if customer_id:
-    user = check_user_exists(customer_id)
+    # Retrieve user details directly from session state or database
+    user = st.session_state.get('user_data')  # Assuming user data is also saved in session_state
 
     if user:
         st.success(f"Welcome, {user['firstName']}!")
@@ -40,8 +40,7 @@ if customer_id:
 
         # Display the raw data as a table
         st.dataframe(user_df.set_index("Category"))
-
     else:
-        st.error("User ID not found. Please register on the Home page first.")
+        st.error("User data is missing. Please make sure you're logged in.")
 else:
     st.error("No user ID found. Please ensure you're logged in properly.")
