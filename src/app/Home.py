@@ -31,11 +31,13 @@ if st.button("Enter"):
     user = check_user_exists(customer_id)
 
     if user:
+        st.session_state.customer_id = customer_id  # Save for future access
         st.success(f"Welcome back, {user['firstName']} {user['lastName']}!")
         st.write("You're already registered. No need to fill the form.")
         # Optionally: show more user data
     else:
         customer_id = generate_customer_id()
+        st.session_state.customer_id = customer_id 
         st.warning("Looks like you're new. Please fill out the registration form.")
 
 
