@@ -7,40 +7,53 @@ import pandas as pd
 st.set_page_config(page_title="Finances", page_icon="🌆")
 
 # Show information:
-# Consider changing "Your" below to the name of the person according to their ID
 st.write("# Your Personal Finances")
 st.write("If there seem to be any discrepancies in your information, please email the team behind this page!")
 st.write("We would be glad to help fix and bolster your experience on FinClad!")
 
-# Retrieve customer ID from session state
+# Try to get user info
 customer_id = st.session_state.get('customer_id')
+user = st.session_state.get('user_data')
 
-if customer_id:
-    # Retrieve user details directly from session state or database
-    user = st.session_state.get('user_data')  # Assuming user data is also saved in session_state
+if user:
+    name_display = f"{user.get('firstName', '')} {user.get('lastName', '')}".strip()
+    st.success(f"Welcome{',' if name_display else ''} {name_display}!")
 
-    if user:
-        st.success(f"Welcome, {user['firstName']}!")
+    # Safely convert data to float
+    def safe_float(value):
+        try:
+            return float(value)
+        except:
+            return 0.0
 
-        # Prepare user financial data for graphing
-        user_data = {
-            "Account Balance": float(user["accountBalance"]),
-            "Credit Limit": float(user["creditLimit"]),
-            "Credit Card Balance": float(user["creditCardBalance"])
-        }
+    user_data = {
+        "Account Balance": safe_float(user.get("accountBalance", 0)),
+        "Credit Limit": safe_float(user.get("creditLimit", 0)),
+        "Credit Card Balance": safe_float(user.get("creditCardBalance", 0)),
+    }
 
-        # Convert user financial data into a DataFrame
-        user_df = pd.DataFrame(user_data.items(), columns=["Category", "Amount"])
+    # Create DataFrame
+    user_df = pd.DataFrame(user_data.items(), columns=["Category", "Amount"])
 
-        # Create a barplot for the financial summary
-        fig, ax = plt.subplots()
-        sns.barplot(data=user_df, x="Category", y="Amount", ax=ax, palette="Blues_d")
-        ax.set_title("Your Financial Summary")
-        st.pyplot(fig)
+    # Plot bar chart
+    fig, ax = plt.subplots()
+    sns.barplot(data=user_df, x="Category", y="Amount", ax=ax, palette="Blues_d")
+    ax.set_title("Your Financial Summary")
+    st.pyplot(fig)
 
-        # Display the raw data as a table
-        st.dataframe(user_df.set_index("Category"))
-    else:
-        st.error("User data is missing. Please make sure you're logged in.")
+    # Optional: show percentages
+    user_df["Percentage"] = user_df["Amount"] / user_df["Amount"].sum() * 100
+
+    # Show data table
+    st.dataframe(user_df.set_index("Category"))
+
+    # Optional: download CSV
+    st.download_button(
+        label="Download Summary as CSV",
+        data=user_df.to_csv(index=False),
+        file_name="financial_summary.csv",
+        mime="text/csv"
+    )
+
 else:
-    st.error("No user ID found. Please ensure you're logged in properly.")
+    st.error("User data is missing. Please go to the Home page to enter your details or upload a CSV.")
