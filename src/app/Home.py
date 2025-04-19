@@ -137,21 +137,21 @@ if st.button("Submit"):
 
             # Insert each row into RDS individually
             for record in record_dicts:
-                   record["customerId"] = record.get("First Name", csv_data.get("customerId", ""))
-                   record["firstName"] = record.get("First Name", csv_data.get("firstName", ""))
-                   record["lastName"] = record.get("Last Name", csv_data.get("lastName", ""))
-                   record["age"] = record.get("Age", csv_data.get("age", ""))
-                   record["city"] = record.get("City", csv_data.get("city", ""))
-                   record["email"] = record.get("Email", csv_data.get("email", ""))
-                   record["accountBalance"] = record.get("Account Balance", csv_data.get("accountBalance", ""))
-                   record["creditLimit"] = record.get("Credit Limit", csv_data.get("creditLimit", ""))
-                   record["creditCardBalance"] = record.get("Credit Card Balance", csv_data.get("creditCardBalance", ""))
+                #    record["customerId"] = record.get("First Name", csv_data.get("customerId", ""))
+                #    record["firstName"] = record.get("First Name", csv_data.get("firstName", ""))
+                #    record["lastName"] = record.get("Last Name", csv_data.get("lastName", ""))
+                #    record["age"] = record.get("Age", csv_data.get("age", ""))
+                #    record["city"] = record.get("City", csv_data.get("city", ""))
+                #    record["email"] = record.get("Email", csv_data.get("email", ""))
+                #    record["accountBalance"] = record.get("Account Balance", csv_data.get("accountBalance", ""))
+                #    record["creditLimit"] = record.get("Credit Limit", csv_data.get("creditLimit", ""))
+                #    record["creditCardBalance"] = record.get("Credit Card Balance", csv_data.get("creditCardBalance", ""))
                    insert_user_into_rds(record)
 
 
         st.success(f"✅ Uploaded to S3 and inserted into RDS!")
-    # except Exception as e:
-    #     st.error(f"❌ Upload failed: {e}")
+    except Exception as e:
+        st.error(f"❌ Upload failed: {e}")
 
 
 
