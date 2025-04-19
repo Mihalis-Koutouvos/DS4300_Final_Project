@@ -106,7 +106,7 @@ account_balance = st.text_input("Account Balance:", value=csv_data.get("accountB
 credit_limit = st.text_input("Credit Limit:", value=csv_data.get("creditLimit", ""))
 credit_card_balance = st.text_input("Credit Card Balance:", value=csv_data.get("creditCardBalance", ""))
 
-
+error_placeholder = st.empty()
 # Submit button
 if st.button("Submit"):
     user_data = {
@@ -149,9 +149,9 @@ if st.button("Submit"):
                    insert_user_into_rds(record)
 
 
-        st.success(f"✅ Uploaded to S3 and inserted into RDS!")
+        st.success(f"Uploaded to S3 and inserted into RDS!")
     except Exception as e:
-        st.success(f"✅ Uploaded to S3 and inserted into RDS.")
+        st.success(f"Uploaded to S3 and inserted into RDS.")
 
 
 
