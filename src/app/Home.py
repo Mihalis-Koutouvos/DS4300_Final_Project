@@ -150,8 +150,8 @@ if st.button("Submit"):
 
 
         st.success(f"✅ Uploaded to S3 and inserted into RDS!")
-    except Exception as e:
-        st.error(f"❌ Upload failed: {e}")
+    # except Exception as e:
+    #     st.error(f"❌ Upload failed: {e}")
 
 
 
