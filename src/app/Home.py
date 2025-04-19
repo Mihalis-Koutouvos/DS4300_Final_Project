@@ -121,6 +121,7 @@ if st.button("Submit"):
 
             # Insert each row into RDS individually
             for record in record_dicts:
+                record["customerId"] = customer_id  # Add the customerId to each row
                 insert_user_into_rds(record)
 
 
