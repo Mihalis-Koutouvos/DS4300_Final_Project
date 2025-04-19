@@ -53,23 +53,37 @@ if uploaded_files:
     for i, file in enumerate(uploaded_files):
         try:
             df = pd.read_csv(file)
+
+            # 🔁 Rename columns to match expected schema
+            df.rename(columns={
+                "User ID": "customerId",
+                "First Name": "firstName",
+                "Last Name": "lastName",
+                "Age": "age",
+                "City": "city",
+                "Email": "email",
+                "Account Balance": "accountBalance",
+                "Credit Limit": "creditLimit",
+                "Credit Card Balance": "creditCardBalance"
+            }, inplace=True)
+
             if df.empty:
                 st.warning(f"File {file.name} is empty.")
             else:
                 monthly_data.append((file.name, df))
 
-                # Populate form from first file only
+                # Fill the form from first row
                 if i == 0:
                     row = df.iloc[0]
                     csv_data = {
-                        "firstName": row.get("First Name", ""),
-                        "lastName": row.get("Last Name", ""),
-                        "age": str(row.get("Age", "")),
-                        "city": row.get("City", ""),
-                        "email": row.get("Email", ""),
-                        "accountBalance": str(row.get("Account Balance", "")),
-                        "creditLimit": str(row.get("Credit Limit", "")),
-                        "creditCardBalance": str(row.get("Credit Card Balance", ""))
+                        "firstName": row.get("firstName", ""),
+                        "lastName": row.get("lastName", ""),
+                        "age": str(row.get("age", "")),
+                        "city": row.get("city", ""),
+                        "email": row.get("email", ""),
+                        "accountBalance": str(row.get("accountBalance", "")),
+                        "creditLimit": str(row.get("creditLimit", "")),
+                        "creditCardBalance": str(row.get("creditCardBalance", ""))
                     }
 
         except Exception as e:
