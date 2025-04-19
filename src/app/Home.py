@@ -88,7 +88,7 @@ if uploaded_files:
                     }
 
         except Exception as e:
-            st.error(f"❌ Failed to process {file.name}: {e}")
+            st.error(f"Failed to process {file.name}: {e}")
 
     st.success(f"{len(monthly_data)} file(s) processed successfully.")
 
