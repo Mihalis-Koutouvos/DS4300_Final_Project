@@ -113,12 +113,16 @@ if st.button("Submit"):
 
         # Upload each file to S3
         for file_name, df in monthly_data:
-            record_dict = df.to_dict(orient="records")
+            record_dicts = df.to_dict(orient="records")  # This is a list of dicts
             upload_key = f"{customer_id}/{file_name}"
-            s3_key = upload_user_data_to_s3(record_dict, identifier=upload_key)
-        
-            # Insert to RDS
-            insert_user_into_rds(record_dict)
+            
+            # Upload the whole file to S3
+            s3_key = upload_user_data_to_s3(record_dicts, identifier=upload_key)
+
+            # Insert each row into RDS individually
+            for record in record_dicts:
+                insert_user_into_rds(record)
+
 
         st.success(f"✅ Uploaded to S3 and inserted into RDS!")
     except Exception as e:
