@@ -76,6 +76,7 @@ if uploaded_files:
                 if i == 0:
                     row = df.iloc[0]
                     csv_data = {
+                        "customerId": row.get("customerId", ""),
                         "firstName": row.get("firstName", ""),
                         "lastName": row.get("lastName", ""),
                         "age": str(row.get("age", "")),
@@ -95,6 +96,7 @@ if uploaded_files:
 
 
 #Begin process of collecting information based on user input:
+customer_id = st.text_input("User ID:", value=csv_data.get("customerId", ""))
 first_name = st.text_input("First Name:", value=csv_data.get("firstName", ""))
 last_name = st.text_input("Last Name:", value=csv_data.get("lastName", ""))
 age = st.text_input("Age:", value=csv_data.get("age", ""))
@@ -135,7 +137,7 @@ if st.button("Submit"):
 
             # Insert each row into RDS individually
             for record in record_dicts:
-                   record["customerId"] = customer_id
+                   record["customerId"] = record.get("First Name", csv_data.get("customerId", ""))
                    record["firstName"] = record.get("First Name", csv_data.get("firstName", ""))
                    record["lastName"] = record.get("Last Name", csv_data.get("lastName", ""))
                    record["age"] = record.get("Age", csv_data.get("age", ""))
