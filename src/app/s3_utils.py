@@ -30,7 +30,7 @@ def upload_user_data_to_s3(user_data, identifier):
     """
     try:
         #timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-        file_name = f"user_uploads/{identifier}.json"
+        file_name = f"user_uploads/{identifier}"
 
         s3.put_object(
             Bucket=S3_BUCKET,
